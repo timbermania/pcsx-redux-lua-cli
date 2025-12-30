@@ -10,6 +10,11 @@ local RESPONSE_FILE = BRIDGE_DIR .. "response.txt"
 local tick_counter = 0
 local CHECK_INTERVAL = 30 -- Check every 30 frames (approx 0.5s)
 
+-- Heartbeat timer (log every ~10 seconds to show watcher is alive)
+local heartbeat_counter = 0
+local HEARTBEAT_INTERVAL = 600 -- ~10 seconds at 60fps
+local total_commands = 0
+
 function CheckBridge()
     local f = io.open(INCOMING_FILE, "r")
     if f then
@@ -22,6 +27,7 @@ function CheckBridge()
             return
         end
 
+        total_commands = total_commands + 1
         print("[Bridge] Found incoming command with '-- run' marker.")
         
         -- Delete the incoming file immediately to prevent double execution
@@ -83,12 +89,23 @@ local old_DrawImguiFrame = DrawImguiFrame
 
 function DrawImguiFrame()
     if old_DrawImguiFrame then old_DrawImguiFrame() end
-    
+
     tick_counter = tick_counter + 1
+    heartbeat_counter = heartbeat_counter + 1
+
+    -- Heartbeat log every ~10 seconds
+    if heartbeat_counter >= HEARTBEAT_INTERVAL then
+        heartbeat_counter = 0
+        print(string.format("[Bridge] Heartbeat - alive, %d commands processed", total_commands))
+    end
+
     if tick_counter >= CHECK_INTERVAL then
         tick_counter = 0
         -- Use pcall to ensure we don't crash the UI loop if IO fails
-        pcall(CheckBridge)
+        local ok, err = pcall(CheckBridge)
+        if not ok then
+            print("[Bridge] ERROR in CheckBridge: " .. tostring(err))
+        end
     end
 end
 
