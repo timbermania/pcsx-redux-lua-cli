@@ -1,0 +1,14 @@
+# PCSX-Redux Lua CLI Configuration
+# Copy this file to config.sh and update the paths for your system
+
+# Path to PCSX-Redux executable (Windows path via WSL mount)
+PCSX_EXE="/mnt/c/Users/YOUR_USER/path/to/pcsx-redux.exe"
+
+# Bridge directory for IPC (Windows path via WSL mount)
+BRIDGE_DIR="/mnt/c/Users/YOUR_USER/AppData/Roaming/pcsx-effect-editor/lua_cli"
+
+# WSL distro name (run 'wsl.exe -l -q' to find yours)
+WSL_DISTRO="Ubuntu"
+
+# Path to this repo (WSL path)
+REPO_DIR="/home/YOUR_USER/pcsx-redux-lua-cli"

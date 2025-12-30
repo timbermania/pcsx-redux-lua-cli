@@ -4,7 +4,15 @@
 # Usage: ./bridge.sh path/to/script.lua
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BRIDGE_DIR="/mnt/c/Users/acurr/AppData/Roaming/pcsx-effect-editor/lua_cli"
+CONFIG_FILE="$SCRIPT_DIR/../config.sh"
+
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo "[bridge] ERROR: config.sh not found. Copy config.sh.example to config.sh and update paths." >&2
+    exit 1
+fi
+
+source "$CONFIG_FILE"
+
 INCOMING="$BRIDGE_DIR/incoming.lua"
 RESPONSE="$BRIDGE_DIR/response.txt"
 TIMEOUT=10  # seconds to wait for response

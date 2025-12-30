@@ -25,18 +25,25 @@ WSL/Gemini                          Windows PCSX-Redux
 - Captures all `print()` output and writes to `response.txt`
 - Uses `load()` + `pcall()` for safe execution with syntax/runtime error handling
 
+## Setup
+
+1. Copy `config.sh.example` to `config.sh` and update paths for your system
+2. Run `./tools/setup-hook.sh` to install the auto-start hook into PCSX-Redux
+3. Restart PCSX-Redux - watcher should auto-load
+
+**Configuration (`config.sh`):**
+- `PCSX_EXE` - Path to pcsx-redux.exe
+- `BRIDGE_DIR` - Path to the lua_cli bridge directory
+- `WSL_DISTRO` - Your WSL distribution name
+- `REPO_DIR` - Path to this repo
+
 ## Development
 
-**Auto-start:** The watcher automatically loads when PCSX-Redux starts via a hook in `%APPDATA%\pcsx-redux\output.lua` that points to `tools/watcher.lua` in this repo via WSL path.
+**Auto-start:** The watcher automatically loads when PCSX-Redux starts via a hook in `%APPDATA%\pcsx-redux\output.lua`.
 
-**Manual start (if needed):**
-```lua
-dofile('//wsl.localhost/Ubuntu/home/acurry/pcsx-redux-lua-cli/tools/watcher.lua')
-```
-
-**Bridge paths:**
-- Windows: `%APPDATA%\pcsx-effect-editor\lua_cli\`
-- WSL: `/mnt/c/Users/acurr/AppData/Roaming/pcsx-effect-editor/lua_cli/`
+**Bridge paths (configured in config.sh):**
+- Default Windows: `%APPDATA%\pcsx-effect-editor\lua_cli\`
+- Default WSL: `/mnt/c/Users/<user>/AppData/Roaming/pcsx-effect-editor/lua_cli/`
 
 **Protocol:**
 1. Write Lua code to `incoming.lua` with `-- run` appended at the end

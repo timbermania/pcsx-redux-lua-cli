@@ -4,8 +4,16 @@
 
 set -e
 
-PCSX_EXE="/mnt/c/Users/acurr/Documents/pcsx-redux-nightly-23057.20251115.5-x64/pcsx-redux.exe"
-BRIDGE_DIR="/mnt/c/Users/acurr/AppData/Roaming/pcsx-effect-editor/lua_cli"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="$SCRIPT_DIR/../config.sh"
+
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo "[recover] ERROR: config.sh not found. Copy config.sh.example to config.sh and update paths." >&2
+    exit 1
+fi
+
+source "$CONFIG_FILE"
+
 INCOMING="$BRIDGE_DIR/incoming.lua"
 RESPONSE="$BRIDGE_DIR/response.txt"
 MAX_WAIT=30  # seconds to wait for watcher to come online
@@ -17,8 +25,9 @@ sleep 1
 
 echo "[recover] Starting PCSX-Redux..."
 # Start in background, detached from terminal
-cd "/mnt/c/Users/acurr/Documents/pcsx-redux-nightly-23057.20251115.5-x64"
-cmd.exe /c start "" "pcsx-redux.exe" &
+PCSX_DIR="$(dirname "$PCSX_EXE")"
+cd "$PCSX_DIR"
+cmd.exe /c start "" "$(basename "$PCSX_EXE")" &
 
 echo "[recover] Waiting for watcher to come online..."
 
