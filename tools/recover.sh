@@ -75,17 +75,58 @@ sleep "$ISO_BOOT_WAIT"
 echo "[recover] Loading save state: $SAVE_STATE"
 rm -f "$RESPONSE"
 
-cat > "$INCOMING" << EOF
-local f = Support.File.open("$SAVE_STATE", "READ")
-if f then
-    PCSX.loadSaveState(f)
+cat > "$INCOMING" << 'LUAEOF'
+local path = "SAVE_STATE_PLACEHOLDER"
+print("Loading save state: " .. path)
+
+-- Check if file is gzip compressed
+local function is_gzip(p)
+    local f = io.open(p:gsub("/", "\\"), "rb")
+    if not f then return false end
+    local magic = f:read(2)
     f:close()
-    print("Save state loaded successfully")
-else
-    print("ERROR: Could not open save state file")
+    if not magic or #magic < 2 then return false end
+    return string.byte(magic, 1) == 0x1f and string.byte(magic, 2) == 0x8b
 end
--- run
-EOF
+
+-- Pause emulator before loading
+PCSX.pauseEmulator()
+print("Emulator paused")
+
+local file = Support.File.open(path, "READ")
+if not file then
+    print("ERROR: Could not open file")
+else
+    print("File opened, size: " .. tostring(file:size()))
+
+    if is_gzip(path) then
+        print("File is compressed, using zReader...")
+        local decompressed = Support.File.zReader(file)
+        if decompressed then
+            PCSX.loadSaveState(decompressed)
+            decompressed:close()
+            print("Save state loaded (compressed)")
+        else
+            print("ERROR: zReader failed")
+        end
+    else
+        print("File is uncompressed, loading directly...")
+        PCSX.loadSaveState(file)
+        print("Save state loaded (uncompressed)")
+    end
+    file:close()
+end
+
+-- Resume emulator
+PCSX.resumeEmulator()
+print("Emulator resumed")
+LUAEOF
+
+# Replace placeholder with actual path
+sed -i "s|SAVE_STATE_PLACEHOLDER|$SAVE_STATE|g" "$INCOMING"
+
+# Add the run marker
+echo "-- run" >> "$INCOMING"
 
 # Wait for save state load confirmation
 for i in $(seq 1 10); do

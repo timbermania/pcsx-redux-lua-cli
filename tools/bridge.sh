@@ -15,7 +15,7 @@ source "$CONFIG_FILE"
 
 INCOMING="$BRIDGE_DIR/incoming.lua"
 RESPONSE="$BRIDGE_DIR/response.txt"
-TIMEOUT=10  # seconds to wait for response
+TIMEOUT=30  # seconds to wait for response
 AUTO_RECOVER=true
 
 # Parse arguments
