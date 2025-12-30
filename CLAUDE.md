@@ -27,11 +27,11 @@ WSL/Gemini                          Windows PCSX-Redux
 
 ## Development
 
-**Auto-start:** The watcher automatically loads when PCSX-Redux starts via a hook in `%APPDATA%\pcsx-redux\output.lua`.
+**Auto-start:** The watcher automatically loads when PCSX-Redux starts via a hook in `%APPDATA%\pcsx-redux\output.lua` that points to `tools/watcher.lua` in this repo via WSL path.
 
 **Manual start (if needed):**
 ```lua
-dofile('C:/Users/acurr/Documents/pcsx-redux-nightly-23057.20251115.5-x64/tools/watcher.lua')
+dofile('//wsl.localhost/Ubuntu/home/acurry/pcsx-redux-lua-cli/tools/watcher.lua')
 ```
 
 **Bridge paths:**
@@ -69,4 +69,3 @@ Sends a command and auto-recovers on timeout.
 - If file deletion fails, execution is skipped to prevent infinite loops
 - Output capture overrides `print()` temporarily, preserving original behavior
 - The watcher is protected by `pcall()` to never crash the emulator UI loop
-- Watcher copy lives at: `C:\Users\acurr\Documents\pcsx-redux-nightly-23057.20251115.5-x64\tools\watcher.lua`
