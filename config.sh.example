@@ -12,3 +12,13 @@ WSL_DISTRO="Ubuntu"
 
 # Path to this repo (WSL path)
 REPO_DIR="/home/YOUR_USER/pcsx-redux-lua-cli"
+
+# Game ISO path (Windows path with forward slashes for Lua)
+GAME_ISO="C:/Users/YOUR_USER/Documents/psx-games/Your Game.bin"
+
+# Save state file path (Windows path with forward slashes for Lua)
+SAVE_STATE="C:/Users/YOUR_USER/AppData/Roaming/pcsx-redux/GAMEID.sstate0"
+
+# Seconds to wait after loading ISO before loading save state
+# (game needs time to boot before save state will work)
+ISO_BOOT_WAIT=15

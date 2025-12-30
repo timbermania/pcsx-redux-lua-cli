@@ -36,6 +36,9 @@ WSL/Gemini                          Windows PCSX-Redux
 - `BRIDGE_DIR` - Path to the lua_cli bridge directory
 - `WSL_DISTRO` - Your WSL distribution name
 - `REPO_DIR` - Path to this repo
+- `GAME_ISO` - Path to game ISO/BIN (Windows path with forward slashes)
+- `SAVE_STATE` - Path to save state file to restore after recovery
+- `ISO_BOOT_WAIT` - Seconds to wait for game to boot before loading save state
 
 ## Development
 
@@ -60,9 +63,10 @@ If PCSX-Redux crashes or becomes unresponsive:
 
 This script:
 1. Kills any existing `pcsx-redux.exe` process
-2. Starts PCSX-Redux fresh (watcher auto-loads)
+2. Starts PCSX-Redux with the configured ISO (`-iso` flag) and runs it (`-run`)
 3. Polls until watcher responds to a test command
-4. Exits with success when ready
+4. Waits for game to boot (`ISO_BOOT_WAIT` seconds)
+5. Loads the configured save state via Lua
 
 **Wrapper with auto-recovery:**
 ```bash
